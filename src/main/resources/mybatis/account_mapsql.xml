@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gather.dao.AccountDao" >
+  <resultMap id="BaseResultMap" type="com.gather.model.Account" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="account_name" property="accountName" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="pswd" property="pswd" jdbcType="VARCHAR" />
+    <result column="identity_id" property="identityId" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="province_id" property="provinceId" jdbcType="INTEGER" />
+    <result column="city_id" property="cityId" jdbcType="INTEGER" />
+    <result column="district_id" property="districtId" jdbcType="INTEGER" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="pswd_error_num" property="pswdErrorNum" jdbcType="INTEGER" />
+    <result column="ctm" property="ctm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, account_name,user_name,status, pswd, identity_id, email, phone, province_id, city_id, district_id, 
+    address,pswd_error_num, DATE_FORMAT(ctm,'%Y-%m-%d %H:%i:%s') sctm
+  </sql>
+  <sql id="where_query">
+	<where>
+		status != "delete"
+		<if test="id != null and id != ''">
+			and id = #{id}
+		</if>
+		<if test="userName != null and userName != ''">
+			and user_name like CONCAT('%', #{userName},'%')
+		</if>
+		<if test="accountName != null and accountName != ''">
+			and account_name like CONCAT('%', #{accountName},'%')
+		</if>
+	</where>
+  </sql>
+  <select id="accountList" resultMap="BaseResultMap" parameterType="com.gather.model.Account">
+  	select id,account_name,user_name,status,email, phone, province_id, city_id, district_id,address,DATE_FORMAT(ctm,'%Y-%m-%d %H:%i:%s') sctm
+  	from account <include refid="where_query" />
+  	order by ctm
+  	LIMIT #{start},#{pageSize} 
+  </select>
+  <select id="listNum" resultType="java.lang.Integer" parameterType="com.gather.model.Account">
+  	select count(*) from account <include refid="where_query" />
+  </select>
+  <select id="getAccount" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from account
+    where id = #{id,jdbcType=INTEGER} and status != "delete"
+  </select>
+  <select id="getAccountName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from account
+    where account_name = #{name,jdbcType=VARCHAR} and status != "delete"
+  </select>
+  <update id="updatePswdNum">
+  	update account set pswd_error_num = #{errorNum,jdbcType=INTEGER}  where id = #{id,jdbcType=INTEGER}
+  </update>
+   <update id="updatePswd">
+  	update account set pswd = #{pswd,jdbcType=VARCHAR}  where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="createAccount" parameterType="com.gather.model.Account" >
+    insert into account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="accountName != null" >
+        account_name,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="pswd != null" >
+        pswd,
+      </if>
+      <if test="identityId != null" >
+        identity_id,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="provinceId != null" >
+        province_id,
+      </if>
+      <if test="cityId != null" >
+        city_id,
+      </if>
+      <if test="districtId != null" >
+        district_id,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="pswdErrorNum != null" >
+        pswd_error_num,
+      </if>
+      <if test="ctm != null" >
+        ctm,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="accountName != null" >
+        #{accountName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="pswd != null" >
+        #{pswd,jdbcType=VARCHAR},
+      </if>
+      <if test="identityId != null" >
+        #{identityId,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceId != null" >
+        #{provinceId,jdbcType=INTEGER},
+      </if>
+      <if test="cityId != null" >
+        #{cityId,jdbcType=INTEGER},
+      </if>
+      <if test="districtId != null" >
+        #{districtId,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="pswdErrorNum != null" >
+        #{pswdErrorNum,jdbcType=INTEGER},
+      </if>
+      <if test="ctm != null" >
+        #{ctm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <delete id="deleteAccount" parameterType="java.lang.Integer" >
+    delete from account
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <update id="updateAccount" parameterType="com.gather.model.Account" >
+    update account
+    <set >
+      <if test="accountName != null" >
+        account_name = #{accountName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="pswd != null" >
+        pswd = #{pswd,jdbcType=VARCHAR},
+      </if>
+      <if test="identityId != null" >
+        identity_id = #{identityId,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceId != null" >
+        province_id = #{provinceId,jdbcType=INTEGER},
+      </if>
+      <if test="cityId != null" >
+        city_id = #{cityId,jdbcType=INTEGER},
+      </if>
+      <if test="districtId != null" >
+        district_id = #{districtId,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="pswdErrorNum != null" >
+        pswd_error_num = #{pswdErrorNum,jdbcType=INTEGER},
+      </if>
+      <if test="ctm != null" >
+        ctm = #{ctm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
