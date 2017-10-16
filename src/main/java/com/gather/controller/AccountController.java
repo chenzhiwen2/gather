@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -147,8 +148,8 @@ public class AccountController extends BaseController{
 	@RequestMapping(value = "/login")
 	@ResponseBody
 	public ApiResult login(HttpServletRequest request) {
-		String accountName = request.getParameter("account_name");
-		String pswd = request.getParameter("pswd");
+		String accountName = getParameterStr(request, "account_name");
+		String pswd = getParameterStr(request,"pswd");
 		if(StringUtil.isEmpty(accountName) || StringUtil.isEmpty(pswd)) {
 			return ApiResult.error(-99, isNotNull);
 		}

@@ -3,6 +3,8 @@ package com.gather.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.gather.model.Account;
 
 public class BaseController {
@@ -17,4 +19,27 @@ public class BaseController {
 		HttpSession session = request.getSession();
 		session.setAttribute("accountInfo", a);
 	}
+	
+	protected Integer getParameterInt(HttpServletRequest request,String key,Integer defaultValue)	{
+		try	{
+			return Integer.parseInt(request.getParameter(key));
+		}catch(Exception e)	{
+			return defaultValue;
+		}
+	}
+	protected Integer getParameterInt(HttpServletRequest request,String key)	{
+		return Integer.parseInt(request.getParameter(key));
+	}
+	protected String getParameterStr(HttpServletRequest request,String key)	{
+		String value = request.getParameter(key);
+		return value;
+	}
+	protected String getParameterStr(HttpServletRequest request,String key,String defaultValue)	{
+		String value = request.getParameter(key);
+		if(StringUtils.isEmpty(value))	{
+			return defaultValue;
+		}
+		return value;
+	}
+
 }
