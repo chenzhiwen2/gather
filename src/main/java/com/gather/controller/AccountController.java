@@ -150,7 +150,7 @@ public class AccountController extends BaseController{
 		String accountName = request.getParameter("account_name");
 		String pswd = request.getParameter("pswd");
 		if(StringUtil.isEmpty(accountName) || StringUtil.isEmpty(pswd)) {
-			ApiResult.error(-99, isNotNull);
+			return ApiResult.error(-99, isNotNull);
 		}
 		Account a = accountDao.getAccountName(accountName);
 		if(null == a){
